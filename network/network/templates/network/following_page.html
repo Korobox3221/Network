@@ -1,0 +1,55 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="container">
+        <h2>Posts from people you follow</h2>
+        <div id="posts-view">
+            <br>
+            {% for post in page_obj %}
+            <div class = 'new_post_div'>
+                <div id = 'post-txt' class = 'new_post_cap' data-post-id = "{{ post.id }}">
+                    <h3 class = 'post_user'><a class = 'link' href = '/profile/{{post.user}}'>{{post.user}}</a></h3>
+                    {% if user == post.user %}
+                        <button class="edit-btn">Edit</button>
+                    {% endif %}
+                    <p class = 'post_text'>{{post.post_text}}</p>
+                    <textarea data-post-id = "{{ post.id }}" class = "edit-textarea" style = 'display:none;'></textarea>
+                    <div class = 'edit-actions' style = 'display:none'>
+                        <button class = "save-edit">Save</button>
+                        <button class = "cancel-edit">Cancel</button>
+                    </div>
+                    <p class = 'post_time'>{{post.time}}<p>
+                    <div ><button class="like-btn" data-post-id="{{ post.id }}" data-liked="{{ post.is_liked|yesno:'true,false' }}">
+                            {{ post.is_liked|yesno:"❤️ Unlike,🤍 Like" }}
+                        </button>
+                        <span class="like-count">{{ post.like_counter }}</span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            {% empty %}
+                <p>You aren't following anyone yet.</p>
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+                </span>
+            </div>
+
+        </div>
+    </div>
+    <script src = '/static/network/edit.js/'></script>
+{% endblock %}

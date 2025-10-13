@@ -1,0 +1,111 @@
+{% extends 'network/layout.html' %}
+{% block head %}
+{% endblock %}
+{% block body %}
+<div id="follow-container">
+    {% csrf_token %}
+     <div class = 'profile_head_div'>
+        <h1>{{profile_user}}</h1>
+    </div>
+    <div class = 'profile_head'>
+     <span style ='font-size: 20px;' class = 'followers_count' name = 'followers'>Followers: {{ followers_count }}</span> <span class = 'flw_btn'>{% if visitor != profile_user %}
+    <button id="follow-button" style="padding: 8px 16px; background: {% if is_following %}#dc3545{% else %}#007bff{% endif %}; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        {% if is_following %}Unfollow{% else %}Follow{% endif %}
+    </button>
+    {% endif %}</span><span style ='font-size: 20px;'>Following : {{ following_count }}<span>
+    </div>
+    <br>
+        {% for post in page_obj %}
+        <div class = 'new_post_div'>
+            <div id = 'post-txt' class = 'new_post_cap' data-post-id = "{{ post.id }}">
+                <h3 class = 'post_user'><a class = 'link' href = '/profile/{{post.user}}'>{{post.user}}</a></h3>
+                {% if user == post.user %}
+                    <button class="edit-btn">Edit</button>
+                {% endif %}
+                <p class = 'post_text'>{{post.post_text}}</p>
+                <textarea data-post-id = "{{ post.id }}" class = "edit-textarea" style = 'display:none;'></textarea>
+                <div class = 'edit-actions' style = 'display:none'>
+                    <button class = "save-edit">Save</button>
+                    <button class = "cancel-edit">Cancel</button>
+                </div>
+                <p class = 'post_time'>{{post.time}}<p>
+                <div ><button class="like-btn" data-post-id="{{ post.id }}" data-liked="{{ post.is_liked|yesno:'true,false' }}">
+                        {{ post.is_liked|yesno:"❤️ Unlike,🤍 Like" }}
+                    </button>
+                    <span class="like-count">{{ post.like_counter }}</span>
+                </div>
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    const button = document.getElementById('follow-button');
+    const followersCounter = document.querySelector('.followers_count'); // Get the counter element
+    let isFollowing = {{ is_following|yesno:"true,false" }};
+    let followersCount = {{ followers_count }};
+
+    // Initialize button state
+    updateButton();
+
+    button.addEventListener('click', async function() {
+        const action = isFollowing ? 'unfollow' : 'follow';
+        button.disabled = true; // Disable during request
+
+        try {
+            const response = await fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `action=${action}`
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Update local state
+                isFollowing = !isFollowing;
+                followersCount = isFollowing ? followersCount + 1 : followersCount - 1;
+
+                // Update UI
+                updateButton();
+                followersCounter.textContent = `Followers: ${followersCount}`;
+            } else {
+                const errorData = await response.json();
+                console.error('Error:', errorData.error);
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+    function updateButton() {
+        button.textContent = isFollowing ? 'Unfollow' : 'Follow';
+        button.style.background = isFollowing ? '#dc3545' : '#007bff';
+    }
+});
+</script>
+<script src = '/static/network/edit.js'></script>
+{% endblock %}

@@ -1,0 +1,155 @@
+.new_post_div{
+    border-style: ridge;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.new_post_cap{
+    margin-left: 20px;
+    margin-top: 15px;
+    justify-content: center;
+}
+.new_post_text{
+    width: 99%;
+    height: 75px;
+}
+
+.new_post_btn{
+    background-color: #0390fc;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 5px;
+}
+.n_header{
+    margin-left: 10px;
+
+}
+
+
+
+.post {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.edit-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.edit-buttons {
+    margin: 10px 0;
+}
+
+.save-btn, .cancel-btn {
+    padding: 5px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+
+.like-section {
+    margin-top: 10px;
+}
+
+
+.edit-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.save-edit, .cancel-edit {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-edit {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancel-edit {
+    background-color: #dc3545;
+    color: white;
+}
+
+.edit-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+.like-count{
+    font-size: 20px;
+    margin-left: 5px
+}
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.2s;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+
+
+.like-btn:hover {
+    transform: scale(1.1);
+}
+
+.like-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.profile_head{
+    text-align: center
+}
+
+
+.flw_btn{
+    margin: 10px 50px 20px;
+}
+
+.profile_head_div{
+        text-align: center;
+        border-style: ridge;
+        display: block;
+        margin-bottom: 10px;
+}
