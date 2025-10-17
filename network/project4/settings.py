@@ -11,25 +11,52 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '13kl@xtukpwe&xj2xoysxe9_6=tf@f8ewxer5n&ifnd46+6$%8'
-
+SECRET_KEY = os.environ.get('SECRET_KEY', 'default-fallback-key')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',') 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000'
 ]
 
+
+if os.environ.get('DB_HOST'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            # Читаем все 5 переменных из окружения (Render)
+            'NAME': os.environ.get('DB_NAME'),        # Имя БД: 'postgres'
+            'USER': os.environ.get('DB_USER'),        # Пользователь: 'postgres'
+            'PASSWORD': os.environ.get('DB_PASSWORD'),# Пароль
+            'HOST': os.environ.get('DB_HOST'),        # Хост: db.[ID].supabase.co
+            'PORT': os.environ.get('DB_PORT'),  # Порт: 5432
+            
+            # Добавляем SSL, который нужен Supabase
+            'OPTIONS': {
+                'sslmode': 'require',
+            },
+        }
+    }
+else:
+    # Запасной вариант (для локальной разработки, если переменные не заданы)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), 
+        }
+    }
 # Application definition
 
 SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds (default)
@@ -51,6 +78,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -85,12 +113,6 @@ WSGI_APPLICATION = 'project4.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 AUTH_USER_MODEL = "network.User"
 
